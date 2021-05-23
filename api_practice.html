@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<style>
+    *{
+        margin:0;
+        padding:0;
+    }
+    .container{
+        display: flex;
+        justify-content: center;
+        /* position:relative; */
+    }
+    .weather_items{
+        position:absolute;
+        top:20%;
+        width:20vw;
+        background: white;
+        opacity: 0.7;
+        padding-bottom:30px;
+        /* margin:auto; */
+    }
+    .video{
+        overflow:hidden;
+        position:absolute;
+        top:0;
+        left:0;
+        min-width: 100vw;
+        min-height: 100vh;
+        width: auto;
+        height: auto;
+    }
+    .title{
+        text-align: center;
+        margin: 0 30px 30px 30px;
+        font-size:30px;
+        font-weight: bold;
+    }
+    .contents{
+        background: lightgray;
+        margin:20px 20px 0px 20px;
+        height: 80%;
+        border-radius: 20px;
+        text-align: center;
+        font-weight: bold;
+        padding-bottom:30px;
+    }
+    .weather_icon{
+        font-size: 8vw;
+        /* padding:30px; */
+    }
+    #descript{
+        color:blue;
+    }
+    #temp{
+        color:red;
+    }
+    #wearh_text{
+        border:none;
+        background:none;
+        margin: 30px 30px 0 0px;
+        font-size:3vw;
+        font-weight: bold;
+        display: inline-block;
+        width:100%;
+        text-align: center;
+        
+    }
+    .wearh_text{
+        font-size:3vw;
+    }
+    .item-text{
+        font-size:1.3vw;
+    }
+
+</style>
+<body>
+    <div class="container">
+        <video src="clear.mp4" class="video" id="video" muted autoplay loop></video>
+        <div class="weather_items">
+            <div class="title">
+                <span class="wearh_text"><input type="text" id="wearh_text" value="Seoul"> Weather</span>
+            </div>
+            <div class="contents">
+                <p id="icon" class="weather_icon"></p>
+                <p style="font-size: 2vw; font-family: '나눔명조';">
+                    <span id="descript">
+                    <!-- 날씨를 넣는곳입니다. -->
+                    </span> / 
+                    <span id="temp">
+                        <!-- 온도가 들어가는 곳 입니다. -->
+                    </span>
+                </p>
+                <p style="margin-top:20px" class="item-text">
+                    <span>최저온도 : </span>
+                    <span id="min_temp">
+                        <!-- 최저온도가 들어갑니다. -->
+                    </span>
+                </p>
+                <p class="item-text">
+                    <span>최고온도 : </span>
+                    <span id="max_temp">
+                        <!-- 최고온도가 들어갑니다. -->
+                    </span>
+                </p>
+                <p class="item-text">
+                    <span>습도 : </span>
+                    <span id="hum"></span>
+                </p>
+                <p class="item-text">
+                    <span>기압 : </span>
+                    <span id="pressure"></span>
+                </p>
+            </div>
+        </div>
+    </div>
+<script>
+    
+    const wearh_text = document.getElementById('wearh_text');
+    wearh_text.addEventListener('keydown',(e)=>{
+        if(e.keyCode === 13){
+            action();
+        }
+    });
+    action();
+
+    function action(){
+        const serviceKey = 'c72a18d83b26cf39043d1d8f55a8d575';
+        let lat = 37.556686625082556;
+        let long = 27.0790179278834;
+        let location = wearh_text.value;
+
+        $.get('https://api.openweathermap.org/geo/1.0/direct?q='+location+'&limit=5&appid='+serviceKey,(map)=>{
+            lat = map[0].lat;
+            long = map[0].lon;
+        
+            let url = 'https://api.openweathermap.org/data/2.5/weather?lat='+lat+'&lon='+long+'&appid='+serviceKey+'&lang=kr';
+                       
+            $.post(url,(data)=>{
+                console.log(data);
+                const descript = document.getElementById('descript');
+                const temp = document.getElementById('temp');
+                const min_temp = document.getElementById('min_temp');
+                const max_temp = document.getElementById('max_temp');
+                const hum = document.getElementById('hum');
+                const pressure = document.getElementById('pressure');
+                const icon = document.getElementById('icon');
+                const video = document.getElementById('video');
+                
+                descript.innerText = data.weather[0].description;
+                weather_desc=data.weather[0].description;
+                console.log(weather_desc.indexOf('비'));
+                if(weather_desc.indexOf('맑음')>-1){
+                    icon.innerText = '🌞';
+                    video.src='sunshine.mp4';
+                }else if(weather_desc.indexOf('구름')>-1){
+                    icon.innerText = '🌤'
+                    video.src='clear.mp4';
+                }else if(weather_desc.indexOf('흐림')>-1){
+                    icon.innerText = '☁'
+                    video.src='cloud.mp4';
+                }else if(weather_desc.indexOf('비')>-1){
+                    icon.innerText = '🌧'
+                    video.src='rain.mp4';
+                }else if(weather_desc.indexOf('눈')>-1){
+                    icon.innerText = '☃'
+                    video.src='snow.mp4';
+                }
+                temp.innerText = Math.ceil(data.main.temp-273.15)+'℃';
+                min_temp.innerText = Math.ceil(data.main.temp_min-273.15)+'℃';
+                max_temp.innerText = Math.ceil(data.main.temp_max-273.15)+'℃';
+                hum.innerText = data.main.humidity+'%';
+                pressure.innerText = data.main.pressure+' hPa';
+            });
+        });
+    }
+</script>
+</body>
+</html>
