@@ -33,8 +33,6 @@
         left:0;
         min-width: 100vw;
         min-height: 100vh;
-        width: auto;
-        height: auto;
     }
     .title{
         text-align: center;
@@ -117,11 +115,45 @@
                     <span>기압 : </span>
                     <span id="pressure"></span>
                 </p>
+                <p>
+                    <span id="time">
+
+                    </span>
+                </p>
             </div>
         </div>
     </div>
 <script>
     
+    const time = document.getElementById('time');
+
+    const getDDay = ()=>{
+
+        const setDate = new Date("2017-08-24T00:00:00+0900");
+        const setYear = setDate.getFullYear();
+        const setMonth = setDate.getMonth()+1;
+        const setDay = setDate.getDate();
+
+        const now = new Date();
+
+        const distance = setDate.getTime() - now.getTime();  
+
+        const day = Math.floor(distance/(1000*60*60*24));
+        const hours = Math.floor((distance % (1000*60*60*24))/(1000*60*60));
+        const minutes = Math.floor((distance % (1000*60*60))/(1000*60));
+        const seconds = Math.floor((distance % (1000*60))/1000);
+
+        time.innerText = 
+            `${-day}일 ${-hours < 10 ? `0${-hours}` : -hours} :  ${-minutes < 10 ? `0${-minutes}` : -minutes} :  ${-seconds < 10 ? `0${-seconds}` : -seconds}😍`;
+    }
+
+    const init = ()=>{
+        getDDay();
+        setInterval(getDDay,1000);
+    }
+
+    init();
+
     const wearh_text = document.getElementById('wearh_text');
     wearh_text.addEventListener('keydown',(e)=>{
         if(e.keyCode === 13){
