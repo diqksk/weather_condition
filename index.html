@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather-now</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <video src="clear.mp4" class="video" id="video" muted autoplay loop playsinline></video>
+        <div class="weather_items">
+            <div class="title">
+                <span class="wearh_text"><input type="text" id="wearh_text" value="Seoul"> Weather</span>
+            </div>
+            <div class="contents">
+                <p id="icon" class="weather_icon"></p>
+                <p class="tempweather_text">
+                    <span id="descript">
+                    <!-- 날씨를 넣는곳입니다. -->
+                    </span> / 
+                    <span id="temp">
+                        <!-- 온도가 들어가는 곳 입니다. -->
+                    </span>
+                </p>
+                <p style="margin-top:20px" class="item-text">
+                    <span>최저온도 : </span>
+                    <span id="min_temp">
+                        <!-- 최저온도가 들어갑니다. -->
+                    </span>
+                </p>
+                <p class="item-text">
+                    <span>최고온도 : </span>
+                    <span id="max_temp">
+                        <!-- 최고온도가 들어갑니다. -->
+                    </span>
+                </p>
+                <p class="item-text">
+                    <span>습도 : </span>
+                    <span id="hum"></span>
+                </p>
+                <p class="item-text">
+                    <span>기압 : </span>
+                    <span id="pressure"></span>
+                </p>
+                <p>
+                    <span id="time">
+
+                    </span>
+                </p>
+            </div>
+        </div>
+    </div>
+<script defer src='js.js'>    
+</script>
+</body>
+</html>
